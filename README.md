@@ -1,6 +1,6 @@
-# initial-work-setting
+# my playground
 
-自分用の適当に作業する用
+実験場
 
 ## npm
 ```
