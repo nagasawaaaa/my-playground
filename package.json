@@ -1,0 +1,27 @@
+{
+  "name": "workset",
+  "version": "1.0.0",
+  "description": "my initialize workset",
+  "main": "index.js",
+  "repository": "https://github.com/nagasawaaaa/initial-work-setting",
+  "author": "nagasawaaaa",
+  "license": "MIT",
+  "scripts": {
+    "gulp": "gulp",
+    "start": "gulp"
+  },
+  "dependencies": {
+    "browser-sync": "^2.18.13",
+    "eslint": "^4.5.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-notify": "^3.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-using": "^0.1.1",
+    "rimraf": "^2.6.1",
+    "webpack": "^3.5.5"
+  }
+}
