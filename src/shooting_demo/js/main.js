@@ -1,10 +1,17 @@
 "use strict";
+// - global -------------------------------------------------------------------
 var screenCanvas, info;
 var run = true;
 var fps = 1000 / 30;
 var mouse = new Point();
 var ctx; // canvas2d コンテキスト格納用
 
+
+// - const --------------------------------------------------------------------
+var CHARA_COLOR = 'rgba(0, 0, 255, 0.75)';
+
+
+// - main --------------------------------------------------------------------
 var main = function main () {
   // スクリーンの初期化
   screenCanvas = document.getElementById('screen');
@@ -21,6 +28,10 @@ var main = function main () {
   // その他のエレメント関連
   info = document.getElementById('info');
 
+  // 自機初期化
+  var chara = new Character();
+  chara.init(10);
+
   // レンダリング処理を呼び出す
   var loop = function loop(){
     // HTMLを更新
@@ -32,11 +43,15 @@ var main = function main () {
     // パスの設定を開始
     ctx.beginPath();
 
-    // 円の色を設定する
-    ctx.fillStyle = 'rgba(0, 0, 255, 0.75)';
+    // 自機の位置を設定
+    chara.position.x = mouse.x;
+    chara.position.y = mouse.y;
 
-    // 円を描くパスを設定
-    ctx.arc(mouse.x, mouse.y, 10, 0, Math.PI * 2, false);
+    // 自機を描くパスを設定
+    ctx.arc(chara.position.x, chara.position.y, chara.size, 0, Math.PI * 2, false);
+
+    // 自機の色を設定する
+    ctx.fillStyle = CHARA_COLOR;
 
     // 円を描く
     ctx.fill();
