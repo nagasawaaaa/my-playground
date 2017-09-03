@@ -1,10 +1,20 @@
-"use strict";
+// ============================================================================
+//
+// main.js
+//
+// メインルーチンを記述したファイルです。
+// javascriptファイルのなかで一番最後に読み込まれ、onloadイベントによって動作を
+// 開始するように実装されています。
+// またイベント関連の処理もこのファイルに含まれています。
+//
+// ============================================================================
+
 // - global -------------------------------------------------------------------
 var screenCanvas, info;
 var run = true;
 var fps = 1000 / 30;
 var mouse = new Point();
-var ctx; // canvas2d コンテキスト格納用
+var ctx;
 var fire = false;
 var counter = 0;
 
@@ -12,12 +22,13 @@ var counter = 0;
 var CHARA_COLOR = 'rgba(0, 0, 255, 0.75)';
 var CHARA_SHOT_COLOR = 'rgba(0, 255, 0, 0.75)';
 var CHARA_SHOT_MAX_COUNT = 10;
-
 var ENEMY_COLOR = 'rgba(255, 0, 0, 0.75)';
 var ENEMY_MAX_COUNT = 10;
+var ENEMY_SHOT_COLOR = 'rgba(255, 0, 255, 0.75)';
+var ENEMY_SHOT_MAX_COUNT = 100;
 
-// - main --------------------------------------------------------------------
-var main = function main () {
+// - main ---------------------------------------------------------------------
+window.onload = function(){
   // 汎用変数
   var i, j;
   var p = new Point();
@@ -42,20 +53,26 @@ var main = function main () {
   var chara = new Character();
   chara.init(10);
 
-  // ショットの初期化
-  var charaShot = new Array(CHARA_SHOT_MAX_COUNT);;
-  for (var i = 0; i < CHARA_SHOT_MAX_COUNT; i++) {
+  // 自機ショット初期化
+  var charaShot = new Array(CHARA_SHOT_MAX_COUNT);
+  for(i = 0; i < CHARA_SHOT_MAX_COUNT; i++){
     charaShot[i] = new CharacterShot();
   }
 
-  // 敵機初期化
+  // エネミー初期化
   var enemy = new Array(ENEMY_MAX_COUNT);
-  for (var i = 0; i < ENEMY_MAX_COUNT; i++) {
+  for(i = 0; i < ENEMY_MAX_COUNT; i++){
     enemy[i] = new Enemy();
   }
 
+  // エネミーショット初期化
+  var enemyShot = new Array(ENEMY_SHOT_MAX_COUNT);
+  for(i = 0; i < ENEMY_SHOT_MAX_COUNT; i++){
+    enemyShot[i] = new EnemyShot();
+  }
+
   // レンダリング処理を呼び出す
-  var loop = function loop(){
+  (function(){
     // カウンタをインクリメント
     counter++;
 
@@ -65,6 +82,7 @@ var main = function main () {
     // screenクリア
     ctx.clearRect(0, 0, screenCanvas.width, screenCanvas.height);
 
+    // 自機 ---------------------------------------------------------------
     // パスの設定を開始
     ctx.beginPath();
 
@@ -73,42 +91,48 @@ var main = function main () {
     chara.position.y = mouse.y;
 
     // 自機を描くパスを設定
-    ctx.arc(chara.position.x, chara.position.y, chara.size, 0, Math.PI * 2, false);
+    ctx.arc(
+      chara.position.x,
+      chara.position.y,
+      chara.size,
+      0, Math.PI * 2, false
+    );
 
     // 自機の色を設定する
     ctx.fillStyle = CHARA_COLOR;
 
-    // 円を描く
+    // 自機を描く
     ctx.fill();
 
-    // ショットの生成
     // fireフラグの値により分岐
-    if(fire) {
+    if(fire){
       // すべての自機ショットを調査する
-      for (var i = 0; i < CHARA_SHOT_MAX_COUNT; i++) {
+      for(i = 0; i < CHARA_SHOT_MAX_COUNT; i++){
         // 自機ショットが既に発射されているかチェック
         if(!charaShot[i].alive){
-           // 自機ショットを新規にセット
+          // 自機ショットを新規にセット
           charaShot[i].set(chara.position, 3, 5);
 
           // ループを抜ける
           break;
         }
       }
+      // フラグを降ろしておく
       fire = false;
     }
 
+    // 自機ショット -------------------------------------------------------
     // パスの設定を開始
     ctx.beginPath();
 
     // すべての自機ショットを調査する
-    for (var i = 0; i < CHARA_SHOT_MAX_COUNT; i++) {
+    for(i = 0; i < CHARA_SHOT_MAX_COUNT; i++){
       // 自機ショットが既に発射されているかチェック
-      if (charaShot[i].alive) {
+      if(charaShot[i].alive){
         // 自機ショットを動かす
         charaShot[i].move();
 
-         // 自機ショットを描くパスを設定
+        // 自機ショットを描くパスを設定
         ctx.arc(
           charaShot[i].position.x,
           charaShot[i].position.y,
@@ -125,21 +149,21 @@ var main = function main () {
     ctx.fillStyle = CHARA_SHOT_COLOR;
 
     // 自機ショットを描く
-    ctx.fill()
+    ctx.fill();
 
     // エネミーの出現管理 -------------------------------------------------
     // 100 フレームに一度出現させる
     if(counter % 100 === 0){
       // すべてのエネミーを調査する
-      for (var i = 0; i < ENEMY_MAX_COUNT; i++) {
+      for(i = 0; i < ENEMY_MAX_COUNT; i++){
         // エネミーの生存フラグをチェック
-        if(!enemy[i].alive) {
+        if(!enemy[i].alive){
           // タイプを決定するパラメータを算出
           j = (counter % 200) / 100;
 
           // タイプに応じて初期位置を決める
           var enemySize = 15;
-          p.x = -enemySize + (screenCanvas.width + enemySize * 2) * j;
+          p.x = -enemySize + (screenCanvas.width + enemySize * 2) * j
           p.y = screenCanvas.height / 2;
 
           // エネミーを新規にセット
@@ -151,22 +175,68 @@ var main = function main () {
       }
     }
 
-    // 敵機描画
+    // エネミー -----------------------------------------------------------
     // パスの設定を開始
     ctx.beginPath();
 
-    // すべての自機ショットを調査する
-    for (var i = 0; i < ENEMY_MAX_COUNT; i++) {
-      // 自機ショットが既に発射されているかチェック
-      if (enemy[i].alive) {
-        // 自機ショットを動かす
+    // すべてのエネミーを調査する
+    for(i = 0; i < ENEMY_MAX_COUNT; i++){
+      // エネミーの生存フラグをチェック
+      if(enemy[i].alive){
+        // エネミーを動かす
         enemy[i].move();
 
-         // 自機ショットを描くパスを設定
+        // エネミーを描くパスを設定
         ctx.arc(
           enemy[i].position.x,
           enemy[i].position.y,
           enemy[i].size,
+          0, Math.PI * 2, false
+        );
+
+        // ショットを打つかどうかパラメータの値からチェック
+        if(enemy[i].param % 30 === 0){
+          // エネミーショットを調査する
+          for(j = 0; j < ENEMY_SHOT_MAX_COUNT; j++){
+            if(!enemyShot[j].alive){
+              // エネミーショットを新規にセットする
+              p = enemy[i].position.distance(chara.position);
+              p.normalize();
+              enemyShot[j].set(enemy[i].position, p, 5, 5);
+
+              // 1個出現させたのでループを抜ける
+              break;
+            }
+          }
+        }
+
+        // パスをいったん閉じる
+        ctx.closePath();
+      }
+    }
+
+    // エネミーの色を設定する
+    ctx.fillStyle = ENEMY_COLOR;
+
+    // エネミーを描く
+    ctx.fill();
+
+    // エネミーショット ---------------------------------------------------
+    // パスの設定を開始
+    ctx.beginPath();
+
+    // すべてのエネミーショットを調査する
+    for(i = 0; i < ENEMY_SHOT_MAX_COUNT; i++){
+      // エネミーショットが既に発射されているかチェック
+      if(enemyShot[i].alive){
+        // エネミーショットを動かす
+        enemyShot[i].move();
+
+        // エネミーショットを描くパスを設定
+        ctx.arc(
+          enemyShot[i].position.x,
+          enemyShot[i].position.y,
+          enemyShot[i].size,
           0, Math.PI * 2, false
         );
 
@@ -175,37 +245,36 @@ var main = function main () {
       }
     }
 
-    // 自機ショットの色を設定する
-    ctx.fillStyle = ENEMY_COLOR;
+    // エネミーショットの色を設定する
+    ctx.fillStyle = ENEMY_SHOT_COLOR;
 
-    // 自機ショットを描く
-    ctx.fill()
+    // エネミーショットを描く
+    ctx.fill();
 
-    // ループ処理
-    if(run){
-      setTimeout(loop, fps);
-    }
-  };
-  loop();
+    // フラグにより再帰呼び出し
+    if(run){setTimeout(arguments.callee, fps);}
+  })();
+};
 
-}
 
 // - event --------------------------------------------------------------------
-function mouseMove (event) {
+function mouseMove(event){
+  // マウスカーソル座標の更新
   mouse.x = event.clientX - screenCanvas.offsetLeft;
   mouse.y = event.clientY - screenCanvas.offsetTop;
 }
 
-function keyDown (event) {
-  var ck = event.keyCode;
-  if(ck === 27) {
-    run = false;
-  }
-}
-
-function mouseDown (event) {
+function mouseDown(event){
   // フラグを立てる
   fire = true;
 }
 
-window.addEventListener('load', main, false);
+function keyDown(event){
+  // キーコードを取得
+  var ck = event.keyCode;
+
+  // Escキーが押されていたらフラグを降ろす
+  if(ck === 27){run = false;}
+}
+
+
