@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+  #canvas {
+    border: 1px solid #000;
+  }
+  </style>
+
+</head>
+<body>
+  <canvas id="canvas" width="300" height="300"></canvas>
+
+  <script>
+    (function(){
+      var ctx,
+          x = 150,
+          y = 150;
+
+      function gobj(id) {
+        return document.getElementById(id);
+      }
+
+      function init() {
+        var canvas = gobj("canvas");
+        ctx = canvas.getContext("2d");
+        paint();
+      }
+
+      function paint() {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, 300, 300);
+        ctx.fillStyle = "yellow";
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        ctx.arc(x,y, 30, -Math.PI / 4, Math.PI / 4, true);
+        ctx.fill()
+      }
+
+      document.addEventListener('load',init,true);
+    }());
+  </script>
+</body>
+</html>
