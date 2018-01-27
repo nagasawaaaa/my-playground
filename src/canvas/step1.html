@@ -17,7 +17,8 @@
     (function(){
       var ctx,
           x = 150,
-          y = 150;
+          y = 150,
+          isOpen = true;
 
       function gobj(id) {
         return document.getElementById(id);
@@ -26,6 +27,11 @@
       function init() {
         var canvas = gobj("canvas");
         ctx = canvas.getContext("2d");
+        setInterval(tick, 500);
+      }
+
+      function tick() {
+        isOpen = !isOpen;
         paint();
       }
 
@@ -35,7 +41,11 @@
         ctx.fillStyle = "yellow";
         ctx.beginPath();
         ctx.moveTo(x,y);
-        ctx.arc(x,y, 30, -Math.PI / 4, Math.PI / 4, true);
+        if(isOpen) {
+          ctx.arc(x,y, 30, -Math.PI / 4, Math.PI / 4, true);
+        } else {
+          ctx.arc(x,y, 30, 0, Math.PI * 2, true);
+        }
         ctx.fill()
       }
 
