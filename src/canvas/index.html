@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+  #canvas {
+    border: 1px solid #000;
+  }
+  </style>
+
+</head>
+<body>
+  <canvas id="canvas" width="600" height="300"></canvas>
+
+  <script>
+    (function(){
+      function init() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+        paint(ctx);
+      }
+
+      function paint(ctx) {
+        ctx.strokeStyle = "green";
+        ctx.fillRect(0, 0, 600, 300);
+
+        ctx.strokeStyle = "white";
+        ctx.beginPath();
+        ctx.moveTo(300, 0);
+        ctx.lineTo(300,300);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.rect(0, 100, 50, 100);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.rect(550, 100, 50, 100);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(300, 150, 50, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      document.addEventListener('load',init,true);
+    }());
+  </script>
+</body>
+</html>

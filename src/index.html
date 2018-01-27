@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      position: relative;
+    }
+    #ufo {
+      position: absolute;
+      width: 80px;
+      height: 25px;
+      color: green;
+      top: 50px;
+    }
+  </style>
+
+</head>
+<body>
+  <div id="ufo">＜〇〇〇＞</div>
+
+  <script>
+    (function(){
+      var ufo,newufo;
+      function init() {
+        window.addEventListener('keydown', keydown);
+        var ufo = new UFO(document.getElementById('ufo'), 100);
+        NewUFO.prototype = ufo;
+        newufo = new NewUFO(100);
+      }
+
+      function keydown(e) {
+        if (e.keyCode === 37) {
+          newufo.moveLeft();
+        } else if (e.keyCode === 39) {
+          newufo.moveRight();
+        } else if (e.keyCode === 38) {
+          newufo.moveUp();
+        } else if (e.keyCode === 40) {
+          newufo.moveDown();
+        }
+        console.log(newufo);
+      }
+
+      function UFO(_elem, _xpos) {
+        this.elem = _elem;
+        this.xpos = _xpos;
+        this.elem.style.left = this.xpos + "px";
+      }
+
+      UFO.prototype.moveLeft = function () {
+        this.xpos -= 10;
+        this.elem.style.left = this.xpos + "px";
+      }
+
+      UFO.prototype.moveRight = function () {
+        this.xpos += 10;
+        this.elem.style.left = this.xpos + "px";
+      }
+
+      function NewUFO(_ypos) {
+        this.ypos = _ypos;
+        this.elem.style.top = this.ypos;
+      }
+
+      UFO.prototype.moveUp = function () {
+        this.ypos -= 10;
+        this.elem.style.top = this.ypos + "px";
+      }
+
+      UFO.prototype.moveDown = function () {
+        this.ypos += 10;
+        this.elem.style.top = this.ypos + "px";
+      }
+
+      document.addEventListener('load',init,true);
+    }());
+  </script>
+</body>
+</html>

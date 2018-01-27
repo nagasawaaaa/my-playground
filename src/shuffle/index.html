@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+
+    Array.prototype.shuffle = function () {
+      var i = this.length;
+      while (i) {
+        var j = Math.floor(Math.random() * i);
+        var t = this[--i];
+        this[i] = this[j];
+        this[j] = t;
+        return this;
+      }
+    }
+
+    function shuffle() {
+      var cards = [1,1,2,2,3,3,4,4,5,5,6,6];
+      cards.shuffle();
+      document.getElementById('result').textContent = cards.join(",");
+    }
+
+    var timerId;
+
+    function timeoutStart() {
+      timerId = setTimeout(whattime, 1000);
+    }
+
+    function timeoutStop() {
+      clearTimeout(timerId);
+    }
+
+    function intervalStart() {
+      intervalStop();
+      timerId = setInterval(whattime, 1000);
+    }
+
+    function intervalStop() {
+      clearInterval(timerId);
+    }
+
+    function whattime() {
+      document.getElementById('info').innerText = new Date();
+    }
+
+  </script>
+
+  <div>
+    <button onclick="shuffle()">SHUFFLE!!</button>
+    <p id="result"></p>
+  </div>
+
+  <p>
+    <button onclick="timeoutStart()">setTimeout</button>
+    <button onclick="timeoutStop()">clearTimeout</button>
+  </p>
+
+  <p>
+    <button onclick="intervalStart()">setInterval</button>
+    <button onclick="intervalStop()">clearInterval</button>
+  </p>
+
+  <p id="info"></p>
+
+</body>
+</html>
