@@ -18,6 +18,8 @@
       var ctx,
           x = 150,
           y = 150,
+          isKeyDown,
+          rotate = 0,
           isOpen = true;
 
       function gobj(id) {
@@ -27,12 +29,34 @@
       function init() {
         var canvas = gobj("canvas");
         ctx = canvas.getContext("2d");
-        setInterval(tick, 500);
+        document.onkeydown = mykeydown;
+        document.onkeyup = keyup;
+        setInterval(tick, 200);
       }
 
       function tick() {
-        isOpen = !isOpen;
+        if (isKeyDown) {
+          isOpen = !isOpen;
+        }
         paint();
+      }
+
+      function mykeydown(e) {
+        switch (e.keyCode) {
+          case 37: rotate = Math.PI;
+            break; // left
+          case 38: rotate = -Math.PI / 2;
+            break; // up
+          case 39: rotate = 0;
+            break; // right
+          case 40: rotate = +Math.PI / 2;
+           break; // down
+        }
+        isKeyDown = true;
+      }
+
+      function keyup(e) {
+        isKeyDown = false;
       }
 
       function paint() {
@@ -40,13 +64,17 @@
         ctx.fillRect(0, 0, 300, 300);
         ctx.fillStyle = "yellow";
         ctx.beginPath();
-        ctx.moveTo(x,y);
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(rotate);
+        ctx.moveTo(0,0);
         if(isOpen) {
-          ctx.arc(x,y, 30, -Math.PI / 4, Math.PI / 4, true);
+          ctx.arc(0,0, 30, -Math.PI / 4, Math.PI / 4, true);
         } else {
-          ctx.arc(x,y, 30, 0, Math.PI * 2, true);
+          ctx.arc(0,0, 30, 0, Math.PI * 2, true);
         }
-        ctx.fill()
+        ctx.restore();
+        ctx.fill();
       }
 
       document.addEventListener('load',init,true);
