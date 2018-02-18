@@ -21,10 +21,73 @@
         var ctx = canvas.getContext("2d");
 
         // 四角形
-        ctx.strokeRect(10, 10, 200, 150);
-        ctx.fillRect(50, 40, 120, 90);
-        ctx.clearRect(90,65,40,40);
+        // ctx.strokeRect(10, 10, 200, 150);
+        // ctx.fillRect(50, 40, 120, 90);
+        // ctx.clearRect(90,65,40,40);
 
+        // 三角形
+        // ctx.beginPath();
+        // ctx.moveTo(60,120);
+        // ctx.lineTo(110,210);
+        // ctx.lineTo(10,210);
+        // ctx.fill();
+
+        // 十字線
+        // ctx.beginPath();
+        // ctx.moveTo(100,50);
+        // ctx.lineTo(100,150);
+        // ctx.moveTo(50,100);
+        // ctx.lineTo(150,100);
+        // ctx.stroke();
+
+        // 円を描く 時計回り
+        // ctx.beginPath();
+        // ctx.arc(100, 100, 80, calcRadian(30), calcRadian(120), false);
+        // ctx.fill();
+
+        // 円を描く 反時計回り
+        // ctx.beginPath();
+        // ctx.arc(400, 100, 80, calcRadian(30), calcRadian(120), true);
+        // ctx.fill();
+
+        // 角丸
+        // ctx.beginPath();
+        // ctx.moveTo(10,10);
+        // ctx.lineTo(200,10);
+        // ctx.arcTo(250, 10, 250, 160, 50);
+        // ctx.lineTo(250,160);
+        // ctx.stroke();
+
+        strokeRoundedRect(ctx, 10, 10, 200, 200, 10);
+      }
+
+      /**
+       * [strokeRoundedRect 角丸の短形を描画する関数]
+       * @param  {[object]} ctx    [ctx]
+       * @param  {[number]} x      [始点X]
+       * @param  {[number]} y      [始点Y]
+       * @param  {[number]} width  [横幅]
+       * @param  {[number]} height [高さ]
+       * @param  {[number]} radius [ラジアン]
+       * @return {[void]}          [角丸の短形を描画]
+       */
+      function strokeRoundedRect(ctx, x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.arcTo(x + width, y, x + width, y + height, radius);
+        ctx.arcTo(x + width, y + height, x, y + height, radius);
+        ctx.arcTo(x, y + height, x, y, radius);
+        ctx.arcTo(x, y, x + width, y, radius);
+        ctx.stroke();
+      }
+
+      /**
+       * [calcRadian description]
+       * @param  {number} degrees [度]
+       * @return {number}         [ラジアン]
+       */
+      function calcRadian(degrees) {
+        return degrees * Math.PI / 180;
       }
 
       document.addEventListener('load', init, true);
