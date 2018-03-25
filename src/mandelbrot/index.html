@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+  #canvas {
+    border: 1px solid #000;
+  }
+  </style>
+
+</head>
+<body>
+  <canvas id="canvas" width="800" height="640"></canvas>
+
+  <script>
+    (function(){
+      var myCanvas = document.getElementById("mycanvas");
+      var button = document.getElementById("button");
+      var magnification = document.getElementById("magnification");
+
+      function init() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var width = canvas.width;
+        var height = canvas.height;
+
+        //中心点を設定して描画
+        var xc = -0.6, yc = 0;
+        draw();
+
+        // 描画ボタンをクリックして描画
+        button.onclick = draw;
+
+        // 中心座標をマウスでクリックして設定
+        myCanvas.onclick = function(event) {
+          var ix = event.offsetX;
+          var iy = event.offsetY;
+          var mag = parseFloat(magnification.value);
+          xc += (2 * ix / width -1) / mag;
+          yc += (2 * iy - height) / mag / width;
+          draw();
+        }
+
+        // 設定を読み込み描画する関数
+        function draw() {
+          // 倍率
+          var mag = magnification.value;
+          // 最大繰り返し数
+          var maxit = document.getElementById("maxit").value;
+          // 中心座標を表示
+          displayCenter(xc,yc);
+          // マンデルブロ集合を描画
+          mandelbrot(ctx,xc,yc,mag,maxit);
+        }
+      };
+
+      // 中心座標を表示する関数
+      function displayCenter(xc,yc) {
+        document.getElementById("xc").innerHTML = xc.toFixed(3);
+        document.getElementById("yc").innerHTML = yc.toFixed(3);
+      }
+
+      // mandelbrot集合を描く関数
+      //  c: canvasの描画コンテキスト
+      //  xc,yc: 中心座標
+      //  mag: 拡大率
+      //  maxit: 最大繰り返し数
+      function mandelbrot(c,xc,yc,mag,maxit) {
+        var w = c.canvas.width;
+        var h = c.canvas.height;
+        var xmin = xc - 1/mag;
+        var xmax = xc + 1/mag;
+        var ymin = yc - (xmax-xmin)*h/w/2;
+        var ymax = yc + (xmax-xmin)*h/w/2;
+        var dx = (xmax-xmin)/w;
+        var dy = (ymax-ymin)/h;
+        // 色分け用の色（半径2の中にいた回数で色分けする）
+      }
+
+      document.addEventListener('load',init,true);
+    }());
+  </script>
+</body>
+</html>

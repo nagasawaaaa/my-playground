@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+  #canvas {
+    border: 1px solid #000;
+  }
+  </style>
+
+</head>
+<body>
+  <canvas id="canvas" width="600" height="400"></canvas>
+
+  <script>
+    (function(){
+
+      function init() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext("2d");
+
+        for (var i = 0; i < 12; i++) {
+          ctx.save();   // 座標系を保存
+          var r = Math.PI / 6 * i;  // 座標系の原点をX方向に100,Y方向に100移動
+          ctx.translate(100,100);
+          ctx.rotate(r);  // 座標系をR回転
+
+          ctx.beginPath();
+          ctx.moveTo(0, -60);
+          ctx.lineTo(0, -50);
+          ctx.stroke();
+
+          ctx.restore();  // ctx.save() で保存した内容に復元
+        }
+      }
+
+      function initRect() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "red";
+        ctx.fillRect(10,10,80,50);  // (1)
+
+        ctx.save();
+        ctx.translate(100,0);
+        ctx.scale(1.5, 0.5);
+        ctx.fillStyle = "green";
+        ctx.fillRect(10,10,80,50);  // (2)
+        ctx.restore();
+
+        ctx.save();
+        ctx.transform(0.8, -0.2, -0.3, 0.8, 250, 50);
+        ctx.fillStyle = "blue";
+        ctx.fillRect(10,10,80,50);  // (3)
+        ctx.restore();
+      }
+
+
+      document.addEventListener('load',initRect,true);
+    }());
+  </script>
+</body>
+</html>
