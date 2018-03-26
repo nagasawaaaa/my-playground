@@ -72,5 +72,5 @@
     }
   }
 
-  window.addEventListener('load', init, true);
+  window.addEventListener('DOMContentLoaded', init, true);
 }());
